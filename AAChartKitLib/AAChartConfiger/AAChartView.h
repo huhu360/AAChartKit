@@ -32,14 +32,7 @@
 #import <UIKit/UIKit.h>
 #import "AAOptions.h"
 
-@protocol AAChartViewDidFinishLoadDelegate<NSObject>
-
-/**
- The delegate method of chart view finish loading
- */
-- (void)AAChartViewDidFinishLoad;
-
-@end
+@protocol AAChartViewDidFinishLoadDelegate;
 
 @interface AAChartView:UIView
 
@@ -142,6 +135,20 @@
 
 @end
 
+@protocol AAChartViewDidFinishLoadDelegate<NSObject>
+
+/**
+ The delegate method of chart view finish loading
+ */
+- (void)AAChartViewDidFinishLoad;
+
+@optional
+/**
+ 用于点击事件的代理方法
+ */
+- (void)AAChartViewDidReceiveScriptParam:(id)param;
+
+@end
 
 @interface AAJsonConverter : NSObject
 

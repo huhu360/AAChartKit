@@ -50,7 +50,7 @@
 #define AA_iPhoneXsMax_OR_XR [UIScreen mainScreen].bounds.size.height == 896
 #define AA_isHairIPhone (AA_iPhoneX || AA_iPhoneXsMax_OR_XR)
 
-@interface AAChartView()<WKUIDelegate, WKNavigationDelegate, UIWebViewDelegate> {
+@interface AAChartView()<WKUIDelegate, WKNavigationDelegate, UIWebViewDelegate, WKScriptMessageHandler> {
     UIWebView *_uiWebView;
     WKWebView *_wkWebView;
     NSString  *_optionJson;
@@ -79,7 +79,11 @@
 - (void)setUpBasicWebView {
     
     if (AASYSTEM_VERSION >= 9.0) {
-        _wkWebView = [[WKWebView alloc] init];
+        WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+        [userContentController addScriptMessageHandler:self name:@"jsCallOC"];
+        WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+        configuration.userContentController = userContentController;
+        _wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
         _wkWebView.UIDelegate = self;
         _wkWebView.navigationDelegate = self;
         _wkWebView.backgroundColor = [UIColor whiteColor];
@@ -94,6 +98,20 @@
         _uiWebView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addConstraints:[self configureTheConstraintArrayWithItem:_uiWebView toItem:self]];
     }
+}
+#pragma mark WKScriptMessageHandler
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    NSString *methods = [NSString stringWithFormat:@"%@:", message.name];
+    SEL selector = NSSelectorFromString(methods);
+    if ([self respondsToSelector:selector]) {
+        [self performSelector:selector withObject:message.body];
+    } else {
+        NSLog(@"未实行方法：%@", methods);
+    }
+}
+- (void)jsCallOC:(id)param {
+    NSLog(@"点击获取到的参数:%@", param);
+    [self.delegate AAChartViewDidReceiveScriptParam:param];
 }
 
 - (NSArray *)configureTheConstraintArrayWithItem:(UIView *)childView toItem:(UIView *)fatherView {
