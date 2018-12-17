@@ -140,13 +140,13 @@
 /**
  The delegate method of chart view finish loading
  */
-- (void)AAChartViewDidFinishLoad;
+- (void)AAChartViewDidFinishLoadWithAAChartView:(AAChartView *)aaChartView;
 
 @optional
 /**
  用于点击事件的代理方法
  */
-- (void)AAChartViewDidReceiveScriptParam:(id)param;
+- (void)AAChartView:(AAChartView *)aaChartView didReceiveScriptParam:(id)param;
 
 @end
 

@@ -111,7 +111,9 @@
 }
 - (void)jsCallOC:(id)param {
     NSLog(@"点击获取到的参数:%@", param);
-    [self.delegate AAChartViewDidReceiveScriptParam:param];
+    if ([self.delegate respondsToSelector:@selector(AAChartView:didReceiveScriptParam:)]) {
+        [self.delegate AAChartView:self didReceiveScriptParam:param];
+    }
 }
 
 - (NSArray *)configureTheConstraintArrayWithItem:(UIView *)childView toItem:(UIView *)fatherView {
@@ -251,13 +253,17 @@
 ///WKWebView did finish load
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self drawChart];
-    [self.delegate AAChartViewDidFinishLoad];
+    if ([self.delegate respondsToSelector:@selector(AAChartViewDidFinishLoadWithAAChartView:)]) {
+        [self.delegate AAChartViewDidFinishLoadWithAAChartView:self];
+    }
 }
 
 //UIWebView did finish load
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     [self drawChart];
-    [self.delegate AAChartViewDidFinishLoad];
+    if ([self.delegate respondsToSelector:@selector(AAChartViewDidFinishLoadWithAAChartView:)]) {
+        [self.delegate AAChartViewDidFinishLoadWithAAChartView:self];
+    }
 }
 
 - (void)aa_showTheSeriesElementContentWithSeriesElementIndex:(NSInteger)elementIndex {
