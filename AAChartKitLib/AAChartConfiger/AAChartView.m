@@ -110,6 +110,7 @@
     }
 }
 - (void)jsCallOC:(id)param {
+    NSLog(@"点击获取到的参数:%@", param);
     if ([self.delegate respondsToSelector:@selector(AAChartView:didReceiveScriptParam:)]) {
         [self.delegate AAChartView:self didReceiveScriptParam:param];
     }
